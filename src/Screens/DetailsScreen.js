@@ -10,11 +10,25 @@ import {
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 import { database } from "../firebase/config";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, updateDoc, doc } from "firebase/firestore";
 
-const DetailsScreen = ({navigation}) => {
+const DetailsScreen = ({ navigation, route }) => {
+  const id = route.params.id;
+
   const [titleTask, setTitleTask] = React.useState("");
   const [descriptionTask, setDescriptionTask] = React.useState("");
+
+  const textButton =
+    id !== undefined ? "Actualizar tarea" : "Crear una nueva Tarea";
+  const textTask =
+    id !== undefined ? "Actualiza esta tarea" : "Crear una nueva Tarea";
+
+  useEffect(() => {
+    id !== undefined ? setTitleTask(route.params.title) : titleTask;
+    id !== undefined
+      ? setDescriptionTask(route.params.description)
+      : descriptionTask;
+  }, []);
 
   const onSend = async () => {
     await addDoc(collection(database, "Tasks"), {
@@ -25,13 +39,23 @@ const DetailsScreen = ({navigation}) => {
     navigation.goBack();
   };
 
+  const updateTask = async () => {
+    const ref = doc(database, "Tasks", id);
+    await updateDoc(ref, {
+      titleTask: titleTask || route.params.title,
+      descriptionTask: descriptionTask || route.params.description,
+    });
+
+    navigation.goBack();
+  };
+
   return (
     <Layout
       style={{ flex: 1, alignItems: "center" }}
       backgroundColor={themeColor.primary100}
     >
       <Text size="h3" style={{ marginBottom: 10 }}>
-        Crea una nueva tarea
+        {textTask}
       </Text>
       <View style={style.container}>
         <View>
@@ -65,9 +89,9 @@ const DetailsScreen = ({navigation}) => {
       </View>
 
       <Button
-        text="Crear nueva Tarea"
+        text={textButton}
         status="info"
-        onPress={onSend}
+        onPress={id !== undefined ? updateTask : onSend}
         rightContent={<Ionicons name="ios-create-outline" size={25} />}
       />
     </Layout>

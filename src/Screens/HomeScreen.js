@@ -41,7 +41,7 @@ const HomeScreen = () => {
       headerRight: () => (
         <TouchableOpacity
           style={{ marginRight: 14 }}
-          onPress={() => navigation.push("Details")}
+          onPress={() => navigation.push("Details", {})}
         >
           <FontAwesome5 name="plus-circle" size={25} />
         </TouchableOpacity>
