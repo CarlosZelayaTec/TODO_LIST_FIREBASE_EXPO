@@ -18,6 +18,10 @@ const DetailsScreen = ({ navigation, route }) => {
   const [titleTask, setTitleTask] = React.useState("");
   const [descriptionTask, setDescriptionTask] = React.useState("");
 
+
+  /**
+   *! Refactor this lines 
+   */
   const textButton =
     id !== undefined ? "Actualizar tarea" : "Crear una nueva Tarea";
   const textTask =
