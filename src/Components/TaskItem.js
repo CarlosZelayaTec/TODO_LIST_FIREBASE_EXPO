@@ -1,18 +1,19 @@
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
 import React from "react";
 import { Text, Section, SectionContent } from "react-native-rapi-ui";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { database } from "../firebase/config";
-import { deleteDoc, updateDoc, doc } from "firebase/firestore";
-
+import { deleteTask } from "../api/ApiFirebase";
 import { useNavigation } from "@react-navigation/native";
 
 const TaskItem = (props) => {
   const navigation = useNavigation();
-  const onDelete = () => {
-    const ref = doc(database, "Tasks", props.id);
-    deleteDoc(ref);
+  const deleteOneTask = () => {
+    try {
+      deleteTask(props.id);
+    } catch (e) {
+      alert(e);
+    }
   };
 
   return (
@@ -42,7 +43,7 @@ const TaskItem = (props) => {
             {props.descriptionTask}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onDelete}>
+        <TouchableOpacity onPress={deleteOneTask}>
           <MaterialCommunityIcons name="delete" size={25} color="red" />
         </TouchableOpacity>
       </SectionContent>
