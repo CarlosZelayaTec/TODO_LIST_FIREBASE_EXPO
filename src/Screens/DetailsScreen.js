@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import {
   TextInput,
   themeColor,
@@ -95,6 +95,9 @@ const DetailsScreen = ({ navigation, route }) => {
         onPress={id ? updateOneTask : createOneTask}
         rightContent={<Ionicons name="ios-create-outline" size={25} />}
       />
+
+        <Image source={require('../../assets/add.png')} style={{ width: '80%', marginTop: 20 }} resizeMode='contain' />
+
     </Layout>
   );
 };

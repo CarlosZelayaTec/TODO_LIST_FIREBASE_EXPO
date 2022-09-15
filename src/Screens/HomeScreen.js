@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect } from "react";
-import { TouchableOpacity, FlatList, View } from "react-native";
+import { TouchableOpacity, FlatList, View, Image } from "react-native";
 import { themeColor } from "react-native-rapi-ui";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -11,6 +11,7 @@ const HomeScreen = () => {
   const navigation = useNavigation();
 
   const [tasks, setTasks] = React.useState([]);
+  console.log("🚀 ~ file: HomeScreen.js ~ line 14 ~ HomeScreen ~ tasks", tasks);
 
   useEffect(() => {
     try {
@@ -24,10 +25,10 @@ const HomeScreen = () => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
-          style={{ marginRight: 14 }}
+          style={{ marginRight: 22 }}
           onPress={() => navigation.push("Details", {})}
         >
-          <FontAwesome5 name="plus-circle" size={25} />
+          <FontAwesome5 name="plus-circle" size={35} />
         </TouchableOpacity>
       ),
     });
@@ -36,13 +37,23 @@ const HomeScreen = () => {
   const TaskList = ({ item }) => <TaskItem id={item.id} {...item} />;
 
   return (
-    <View backgroundColor={themeColor.info700} style={{ flex: 1 }}>
-      <FlatList
-        data={tasks}
-        keyExtractor={(x) => x.id}
-        renderItem={TaskList}
-        style={{ marginTop: 10 }}
-      />
+    <View style={{ flex: 1, backgroundColor: `${themeColor.info600}`, borderTopLeftRadius: 15, borderTopRightRadius: 15 }}>
+      {tasks.length === 0 ? (
+        <View style={{flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <Image
+            source={require("../../assets/wait.png")}
+            style={{ width: "80%"}}
+            resizeMode="contain"
+          />
+        </View>
+      ) : (
+        <FlatList
+          data={tasks}
+          keyExtractor={(x) => x.id}
+          renderItem={TaskList}
+          style={{ marginTop: 10 }}
+        />
+      )}
     </View>
   );
 };
