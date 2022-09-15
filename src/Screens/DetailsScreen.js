@@ -14,26 +14,34 @@ import { addDoc, collection, updateDoc, doc } from "firebase/firestore";
 
 const DetailsScreen = ({ navigation, route }) => {
   const id = route.params.id;
+  const [TasksSend, setTaskSend] = React.useState({
+    titleTask: "",
+    descriptionTask: "",
+  });
 
-  const [titleTask, setTitleTask] = React.useState("");
-  const [descriptionTask, setDescriptionTask] = React.useState("");
-
-  const textButton =
-    id !== undefined ? "Actualizar tarea" : "Crear una nueva Tarea";
-  const textTask =
-    id !== undefined ? "Actualiza esta tarea" : "Crear una nueva Tarea";
+  /**
+   *! Refactor this lines
+   *? In process 
+   * * Refactor using operador ternario and quemadores ?? 
+   * * Creamos un solo useState que envia todo el formulario
+   * * Actualizamos los valores que estabamos utilizando con los useState anteriores
+   */
+  const textButton = id ? "Actualizar tarea" : "Crear una nueva Tarea";
+  const textTask = id ? "Actualiza esta tarea" : "Crear una nueva Tarea";
 
   useEffect(() => {
-    id !== undefined ? setTitleTask(route.params.title) : titleTask;
-    id !== undefined
-      ? setDescriptionTask(route.params.description)
-      : descriptionTask;
+    id
+      ? setTaskSend({
+          titleTask: route.params.title,
+          descriptionTask: route.params.description,
+        })
+      : TasksSend.titleTask;
   }, []);
 
   const onSend = async () => {
     await addDoc(collection(database, "Tasks"), {
-      titleTask: titleTask,
-      descriptionTask: descriptionTask,
+      titleTask: TasksSend.titleTask,
+      descriptionTask: TasksSend.descriptionTask,
       createAt: new Date(),
     });
     navigation.goBack();
@@ -42,8 +50,8 @@ const DetailsScreen = ({ navigation, route }) => {
   const updateTask = async () => {
     const ref = doc(database, "Tasks", id);
     await updateDoc(ref, {
-      titleTask: titleTask || route.params.title,
-      descriptionTask: descriptionTask || route.params.description,
+      titleTask: TasksSend.titleTask || route.params.title,
+      descriptionTask: TasksSend.descriptionTask || route.params.description,
     });
 
     navigation.goBack();
@@ -61,8 +69,8 @@ const DetailsScreen = ({ navigation, route }) => {
         <View>
           <TextInput
             placeholder="Title Task"
-            value={titleTask}
-            onChangeText={(e) => setTitleTask(e)}
+            value={TasksSend.titleTask}
+            onChangeText={(e) => setTaskSend({ ...TasksSend, titleTask: e })}
             rightContent={
               <MaterialIcons
                 name="title"
@@ -75,8 +83,10 @@ const DetailsScreen = ({ navigation, route }) => {
         <View>
           <TextInput
             placeholder="Description Task"
-            value={descriptionTask}
-            onChangeText={(e) => setDescriptionTask(e)}
+            value={TasksSend.descriptionTask}
+            onChangeText={(e) =>
+              setTaskSend({ ...TasksSend, descriptionTask: e })
+            }
             rightContent={
               <MaterialIcons
                 name="description"
@@ -91,7 +101,7 @@ const DetailsScreen = ({ navigation, route }) => {
       <Button
         text={textButton}
         status="info"
-        onPress={id !== undefined ? updateTask : onSend}
+        onPress={id ? updateTask : onSend}
         rightContent={<Ionicons name="ios-create-outline" size={25} />}
       />
     </Layout>
