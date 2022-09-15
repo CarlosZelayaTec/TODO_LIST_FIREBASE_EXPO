@@ -18,13 +18,6 @@ const DetailsScreen = ({ navigation, route }) => {
     descriptionTask: "",
   });
 
-  /**
-   *! Refactor this lines
-   *? In process
-   * * Refactor using operador ternario and quemadores ??
-   * * Creamos un solo useState que envia todo el formulario
-   * * Actualizamos los valores que estabamos utilizando con los useState anteriores
-   */
   const textButton = id ? "Actualizar tarea" : "Crear una nueva Tarea";
   const textTask = id ? "Actualiza esta tarea" : "Crear una nueva Tarea";
 
@@ -37,10 +30,6 @@ const DetailsScreen = ({ navigation, route }) => {
       : TasksSend.titleTask;
   }, []);
 
-  /**
-   * ? Esto ya está refactorizado
-   * * Hicimos las peticiones en un archivo aparte: ApiFirebase.js
-   */
   async function createOneTask() {
     try {
       await createTask(TasksSend);
