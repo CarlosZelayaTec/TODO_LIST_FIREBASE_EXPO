@@ -9,8 +9,7 @@ import {
 } from "react-native-rapi-ui";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
-import { database } from "../firebase/config";
-import { addDoc, collection, updateDoc, doc } from "firebase/firestore";
+import { createTask, updateTask } from "../api/ApiFirebase";
 
 const DetailsScreen = ({ navigation, route }) => {
   const id = route.params.id;
@@ -21,8 +20,8 @@ const DetailsScreen = ({ navigation, route }) => {
 
   /**
    *! Refactor this lines
-   *? In process 
-   * * Refactor using operador ternario and quemadores ?? 
+   *? In process
+   * * Refactor using operador ternario and quemadores ??
    * * Creamos un solo useState que envia todo el formulario
    * * Actualizamos los valores que estabamos utilizando con los useState anteriores
    */
@@ -38,24 +37,27 @@ const DetailsScreen = ({ navigation, route }) => {
       : TasksSend.titleTask;
   }, []);
 
-  const onSend = async () => {
-    await addDoc(collection(database, "Tasks"), {
-      titleTask: TasksSend.titleTask,
-      descriptionTask: TasksSend.descriptionTask,
-      createAt: new Date(),
-    });
-    navigation.goBack();
-  };
+  /**
+   * ? Esto ya está refactorizado
+   * * Hicimos las peticiones en un archivo aparte: ApiFirebase.js
+   */
+  async function createOneTask() {
+    try {
+      await createTask(TasksSend);
+      navigation.goBack();
+    } catch (e) {
+      alert(`Tuvimos error en tu peticion ${e}`);
+    }
+  }
 
-  const updateTask = async () => {
-    const ref = doc(database, "Tasks", id);
-    await updateDoc(ref, {
-      titleTask: TasksSend.titleTask || route.params.title,
-      descriptionTask: TasksSend.descriptionTask || route.params.description,
-    });
-
-    navigation.goBack();
-  };
+  async function updateOneTask() {
+    try {
+      await updateTask(id, TasksSend, route);
+      navigation.goBack();
+    } catch (e) {
+      alert(`Tuvimos error en tu peticion ${e}`);
+    }
+  }
 
   return (
     <Layout
@@ -101,7 +103,7 @@ const DetailsScreen = ({ navigation, route }) => {
       <Button
         text={textButton}
         status="info"
-        onPress={id ? updateTask : onSend}
+        onPress={id ? updateOneTask : createOneTask}
         rightContent={<Ionicons name="ios-create-outline" size={25} />}
       />
     </Layout>
