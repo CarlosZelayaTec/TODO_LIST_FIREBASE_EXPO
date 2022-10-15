@@ -11,7 +11,6 @@ const HomeScreen = () => {
   const navigation = useNavigation();
 
   const [tasks, setTasks] = React.useState([]);
-  console.log("🚀 ~ file: HomeScreen.js ~ line 14 ~ HomeScreen ~ tasks", tasks);
 
   useEffect(() => {
     try {
