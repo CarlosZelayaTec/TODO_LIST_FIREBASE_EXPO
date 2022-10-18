@@ -1,16 +1,19 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { HomeScreen, DetailsScreen } from "../Screens/index";
-import { navigation } from "@react-navigation/native";
+import { HomeScreen, DetailsScreen, Login } from "../Screens/index";
 import { themeColor } from "react-native-rapi-ui";
 
 const homeStack = createStackNavigator();
 const HomeStackScreen = () => {
-  const nav = navigation;
 
   return (
     <homeStack.Navigator>
+      <homeStack.Screen 
+        name="Login"
+        component={Login}
+        options={{ headerShown: false }}
+      />
       <homeStack.Screen
         name="Home"
         component={HomeScreen}
