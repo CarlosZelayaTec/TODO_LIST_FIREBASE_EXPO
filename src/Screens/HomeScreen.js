@@ -7,7 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import TaskItem from "../Components/TaskItem";
 import { getTasks } from "../api/ApiFirebase";
 
-const HomeScreen = () => {
+const HomeScreen = ({root}) => {
   const navigation = useNavigation();
 
   const [tasks, setTasks] = React.useState([]);

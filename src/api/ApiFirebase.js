@@ -10,15 +10,15 @@ import {
   orderBy,
 } from "firebase/firestore";
 
-export const createTask = async (task) => {
-  await addDoc(collection(database, "Tasks"), {
+export const createTask = async (task, userId) => {
+  await addDoc(collection(database, "Tasks" + userId), {
     ...task,
     createAt: new Date(),
   });
 };
 
-export const getTasks = async (setTasks) => {
-  const ref = collection(database, "Tasks");
+export const getTasks = async (setTasks, userId) => {
+  const ref = collection(database, "Tasks" + userId);
   const q = query(ref, orderBy("createAt", "desc"));
 
   const unsuscribe = onSnapshot(q, (querySnapshot) => {

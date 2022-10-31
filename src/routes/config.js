@@ -8,7 +8,7 @@ const homeStack = createStackNavigator();
 const HomeStackScreen = () => {
 
   return (
-    <homeStack.Navigator>
+    <homeStack.Navigator initialRouteName="Login" >
       <homeStack.Screen 
         name="Login"
         component={Login}

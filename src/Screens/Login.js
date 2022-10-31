@@ -5,6 +5,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import {
   TextInput,
@@ -12,9 +13,32 @@ import {
   themeColor,
 } from "react-native-rapi-ui";
 
-const Login = () => {
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/config";
+
+const Login = ({ navigation, root }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const createUser = async() => {
+    try {
+        const response = await createUserWithEmailAndPassword(auth, email, password);
+        console.log(response.user.uid);
+        Alert.alert('Creado con exito');
+    } catch (e) {
+        Alert.alert(e);
+    }
+  }
+
+  const SignIn = async () => {
+    try {
+        const response = await signInWithEmailAndPassword(auth, email, password);
+        console.log(response);
+        navigation.push('Home', {});
+    } catch (e) {
+        alert("Credenciales invalidas");
+    }
+  }
 
   return (
     <KeyboardAvoidingView
@@ -43,8 +67,8 @@ const Login = () => {
       </View>
 
       <View style={styles.containerButtons}>
-        <Button text="Entrar" status="danger" />
-        <Button text="Registrarse" status="warning" />
+        <Button text="Entrar" status="danger" onPress={SignIn} />
+        <Button text="Registrarse" status="warning" onPress={createUser} />
       </View>
     </KeyboardAvoidingView>
   );
