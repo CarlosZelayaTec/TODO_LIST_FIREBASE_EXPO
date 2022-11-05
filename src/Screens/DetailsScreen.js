@@ -32,7 +32,7 @@ const DetailsScreen = ({ navigation, route }) => {
 
   async function createOneTask() {
     try {
-      await createTask(TasksSend);
+      await createTask(TasksSend, route.params.user);
       navigation.goBack();
     } catch (e) {
       alert(`Tuvimos error en tu peticion ${e}`);
@@ -41,13 +41,13 @@ const DetailsScreen = ({ navigation, route }) => {
 
   async function updateOneTask() {
     try {
-      await updateTask(id, TasksSend, route);
+      await updateTask(id, route.params.userId, TasksSend, route);
       navigation.goBack();
     } catch (e) {
       alert(`Tuvimos error en tu peticion ${e}`);
     }
   }
-
+  
   return (
     <Layout
       style={{ flex: 1, alignItems: "center" }}

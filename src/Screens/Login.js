@@ -16,14 +16,13 @@ import {
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/config";
 
-const Login = ({ navigation, root }) => {
+const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const createUser = async() => {
     try {
         const response = await createUserWithEmailAndPassword(auth, email, password);
-        console.log(response.user.uid);
         Alert.alert('Creado con exito');
     } catch (e) {
         Alert.alert(e);
@@ -33,8 +32,7 @@ const Login = ({ navigation, root }) => {
   const SignIn = async () => {
     try {
         const response = await signInWithEmailAndPassword(auth, email, password);
-        console.log(response);
-        navigation.push('Home', {});
+        navigation.push('Home', {"user": response.user.uid});
     } catch (e) {
         alert("Credenciales invalidas");
     }

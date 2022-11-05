@@ -2,19 +2,19 @@ import React, { useEffect, useLayoutEffect } from "react";
 import { TouchableOpacity, FlatList, View, Image } from "react-native";
 import { themeColor } from "react-native-rapi-ui";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useR } from "@react-navigation/native";
 
 import TaskItem from "../Components/TaskItem";
 import { getTasks } from "../api/ApiFirebase";
 
-const HomeScreen = ({root}) => {
+const HomeScreen = ({route}) => {
   const navigation = useNavigation();
 
   const [tasks, setTasks] = React.useState([]);
 
   useEffect(() => {
     try {
-      getTasks(setTasks);
+      getTasks(setTasks, route.params.user);
     } catch (e) {
       alert(e);
     }
@@ -25,7 +25,7 @@ const HomeScreen = ({root}) => {
       headerRight: () => (
         <TouchableOpacity
           style={{ marginRight: 22 }}
-          onPress={() => navigation.push("Details", {})}
+          onPress={() => navigation.push("Details", { 'user': route.params.user })}
         >
           <FontAwesome5 name="plus-circle" size={35} />
         </TouchableOpacity>
