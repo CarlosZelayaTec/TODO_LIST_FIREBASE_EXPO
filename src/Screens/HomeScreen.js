@@ -14,7 +14,6 @@ const HomeScreen = () => {
 
   const [tasks, setTasks] = React.useState([]);
   const [input, setInput] = React.useState("");
-  const [refreshing, setRefreshing] = React.useState(false);
   const [ready, setReady] = React.useState(false);
 
   const readData = async () => {
@@ -40,12 +39,6 @@ const HomeScreen = () => {
       alert(e);
     }
   }, [ready]);
-
-  const onRefresh = React.useCallback(async () => {
-    setRefreshing(true)
-    await getTasks();
-    setRefreshing(false);
-  })
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -89,13 +82,6 @@ const HomeScreen = () => {
           keyExtractor={(x) => x.id}
           renderItem={TaskList}
           style={{ marginTop: 10 }}
-          refreshing={refreshing}
-          refreshControl={
-            <RefreshControl 
-            // colors='blue'
-              onRefresh={onRefresh}
-            />
-          }
         />
       )}
     </View>
