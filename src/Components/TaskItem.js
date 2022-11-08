@@ -4,15 +4,14 @@ import { Text, Section, SectionContent } from "react-native-rapi-ui";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { deleteTask } from "../api/ApiFirebase";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 const TaskItem = (props) => {
   const navigation = useNavigation();
-  const route = useRoute();
 
   const deleteOneTask = () => {
     try {
-      deleteTask(props.id, route.params.user);
+      deleteTask(props.id, props.userToken);
     } catch (e) {
       alert(e);
     }
@@ -34,7 +33,7 @@ const TaskItem = (props) => {
               id: props.id,
               title: props.titleTask,
               description: props.descriptionTask,
-              userId: route.params.user
+              userId: props.userToken
             })
           }
           style={{ minWidth: "80%" }}

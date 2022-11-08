@@ -7,50 +7,55 @@ import {
   Platform,
   Alert,
 } from "react-native";
+import { TextInput, Button, themeColor } from "react-native-rapi-ui";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import {
-  TextInput,
-  Button,
-  themeColor,
-} from "react-native-rapi-ui";
-
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "../firebase/config";
-
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const isLogged = async () => {
-    const value = AsyncStorage.getItem('@user_token');
-
-    if(value !== null ) navigation.replace('Home');
-  }
-
-  const createUser = async() => {
     try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        Alert.alert('Creado con exito');
+      const value = await AsyncStorage.getItem("@user_token");
+
+      if (value !== null) navigation.replace("Home");
     } catch (e) {
-        Alert.alert(e);
+      alert(e);
     }
-  }
+  };
+
+  const createUser = async () => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      Alert.alert("Creado con exito");
+    } catch (e) {
+      Alert.alert(e);
+    }
+  };
 
   const SignIn = async () => {
     try {
-        const response = await signInWithEmailAndPassword(auth, email, password);
-        await AsyncStorage.setItem('@user_token', response.user.uid);
-        navigation.replace('Home');
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      await AsyncStorage.setItem("@user_token", response.user.uid);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+      });
     } catch (e) {
-        alert("Credenciales invalidas");
+      alert("Credenciales invalidas");
     }
-  }
+  };
 
   useEffect(() => {
     isLogged();
-  }, [])
+  }, []);
 
   return (
     <KeyboardAvoidingView

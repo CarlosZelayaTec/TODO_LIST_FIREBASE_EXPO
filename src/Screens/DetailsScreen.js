@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import {
   TextInput,
   themeColor,
@@ -8,6 +8,8 @@ import {
   Button,
 } from "react-native-rapi-ui";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { createTask, updateTask } from "../api/ApiFirebase";
 
@@ -42,9 +44,21 @@ const DetailsScreen = ({ navigation, route }) => {
   async function updateOneTask() {
     try {
       await updateTask(id, route.params.userId, TasksSend, route);
-      navigation.goBack();
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Login' }],
+      });
     } catch (e) {
       alert(`Tuvimos error en tu peticion ${e}`);
+    }
+  }
+
+  async function logout(){
+    try {
+      await AsyncStorage.clear();
+      navigation.replace('Login');
+    } catch (e) {
+      alert(e);
     }
   }
   
@@ -57,7 +71,7 @@ const DetailsScreen = ({ navigation, route }) => {
         {textTask}
       </Text>
       <View style={style.container}>
-        <View>
+        <View style={style.labels}>
           <TextInput
             placeholder="Title Task"
             value={TasksSend.titleTask}
@@ -71,7 +85,7 @@ const DetailsScreen = ({ navigation, route }) => {
             }
           />
         </View>
-        <View>
+        <View style={style.labels}>
           <TextInput
             placeholder="Description Task"
             value={TasksSend.descriptionTask}
@@ -98,6 +112,11 @@ const DetailsScreen = ({ navigation, route }) => {
 
         <Image source={require('../../assets/add.png')} style={{ width: '80%', marginTop: 20 }} resizeMode='contain' />
 
+        <TouchableOpacity onPress={logout} style={{alignItems: 'center'}}>
+          <MaterialIcons name="logout" size={40} color='red' />
+          <Text style={{color: 'red'}} >Cerrar sesión</Text>
+        </TouchableOpacity>
+
     </Layout>
   );
 };
@@ -107,7 +126,19 @@ const style = StyleSheet.create({
     justifyContent: "space-evenly",
     minHeight: 100,
     minWidth: "80%",
+    ...Platform.select({
+      android: {
+        marginBottom: 5
+      }
+    })
   },
+  labels: {
+    ...Platform.select({
+      android: {
+        paddingVertical: 3
+      }
+    })
+  }
 });
 
 export default DetailsScreen;
