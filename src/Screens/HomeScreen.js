@@ -2,7 +2,9 @@ import React, { useEffect, useLayoutEffect } from "react";
 import { TouchableOpacity, FlatList, View, Image } from "react-native";
 import { themeColor } from "react-native-rapi-ui";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { useNavigation, useR } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import TaskItem from "../Components/TaskItem";
 import { getTasks } from "../api/ApiFirebase";
@@ -11,14 +13,31 @@ const HomeScreen = ({route}) => {
   const navigation = useNavigation();
 
   const [tasks, setTasks] = React.useState([]);
+  const [input, setInput] = React.useState('');
+
+  const readData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("@user_token");
+  
+      if (value !== null) {
+        setInput(value);
+      }
+    } catch (e) {
+      console.log(e);
+      alert('Failed to fetch the input from storage');
+    }
+  };
 
   useEffect(() => {
     try {
-      getTasks(setTasks, route.params.user);
+      getTasks(setTasks, input);
+      readData();
     } catch (e) {
       alert(e);
     }
   }, []);
+
+  // console.log(input);
 
   useLayoutEffect(() => {
     navigation.setOptions({

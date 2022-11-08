@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -13,16 +13,25 @@ import {
   themeColor,
 } from "react-native-rapi-ui";
 
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/config";
+
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const isLogged = async () => {
+    const value = AsyncStorage.getItem('@user_token');
+
+    if(value !== null ) navigation.replace('Home');
+  }
+
   const createUser = async() => {
     try {
-        const response = await createUserWithEmailAndPassword(auth, email, password);
+        await createUserWithEmailAndPassword(auth, email, password);
         Alert.alert('Creado con exito');
     } catch (e) {
         Alert.alert(e);
@@ -32,11 +41,16 @@ const Login = ({ navigation }) => {
   const SignIn = async () => {
     try {
         const response = await signInWithEmailAndPassword(auth, email, password);
-        navigation.push('Home', {"user": response.user.uid});
+        await AsyncStorage.setItem('@user_token', response.user.uid);
+        navigation.replace('Home');
     } catch (e) {
         alert("Credenciales invalidas");
     }
   }
+
+  useEffect(() => {
+    isLogged();
+  }, [])
 
   return (
     <KeyboardAvoidingView
