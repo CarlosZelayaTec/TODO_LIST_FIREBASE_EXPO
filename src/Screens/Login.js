@@ -46,7 +46,7 @@ const Login = ({ navigation }) => {
       await AsyncStorage.setItem("@user_token", response.user.uid);
       navigation.reset({
         index: 0,
-        routes: [{ name: 'Home' }],
+        routes: [{ name: "Home" }],
       });
     } catch (e) {
       alert("Credenciales invalidas");
