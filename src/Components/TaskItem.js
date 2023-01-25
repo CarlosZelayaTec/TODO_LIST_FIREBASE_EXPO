@@ -8,9 +8,10 @@ import { useNavigation } from "@react-navigation/native";
 
 const TaskItem = (props) => {
   const navigation = useNavigation();
+
   const deleteOneTask = () => {
     try {
-      deleteTask(props.id);
+      deleteTask(props.id, props.userToken);
     } catch (e) {
       alert(e);
     }
@@ -32,6 +33,7 @@ const TaskItem = (props) => {
               id: props.id,
               title: props.titleTask,
               description: props.descriptionTask,
+              userId: props.userToken
             })
           }
           style={{ minWidth: "80%" }}
