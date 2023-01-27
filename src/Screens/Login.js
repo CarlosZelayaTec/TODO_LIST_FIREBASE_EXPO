@@ -6,8 +6,12 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  Keyboard,
+  TouchableWithoutFeedback,
+  ImageBackground,
 } from "react-native";
 import { TextInput, Button, themeColor } from "react-native-rapi-ui";
+import { Ionicons } from "@expo/vector-icons";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -61,32 +65,61 @@ const Login = ({ navigation }) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
-      backgroundColor={themeColor.primary200}
+      backgroundColor={themeColor.black100}
     >
-      <Image
-        source={require("../../assets/login.png")}
-        resizeMode="contain"
-        style={styles.banner}
-      />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ImageBackground
+          source={require("../../assets/background.jpg")}
+          resizeMode="cover"
+          style={styles.inner}
+        >
+          <Image
+            source={require("../../assets/user.png")}
+            resizeMode="cover"
+            style={styles.photo}
+          />
+          <View style={styles.containerInputs}>
+            <TextInput
+              placeholder="email"
+              value={email}
+              rightContent={
+                <Ionicons name="mail" size={23} color={themeColor.gray200} />
+              }
+              onChangeText={(e) => setEmail(e)}
+            />
+            <TextInput
+              placeholder="contraseña"
+              rightContent={
+                <Ionicons
+                  name="lock-closed"
+                  size={23}
+                  color={themeColor.gray200}
+                />
+              }
+              value={password}
+              onChangeText={(e) => setPassword(e)}
+              secureTextEntry={true}
+            />
+          </View>
 
-      <View style={styles.containerInputs}>
-        <TextInput
-          placeholder="email"
-          value={email}
-          onChangeText={(e) => setEmail(e)}
-        />
-        <TextInput
-          placeholder="contraseña"
-          value={password}
-          onChangeText={(e) => setPassword(e)}
-          secureTextEntry={true}
-        />
-      </View>
-
-      <View style={styles.containerButtons}>
-        <Button text="Entrar" status="danger" onPress={SignIn} />
-        <Button text="Registrarse" status="warning" onPress={createUser} />
-      </View>
+          <View style={styles.containerButtons}>
+            <Button
+              text="Entrar"
+              status="danger"
+              onPress={SignIn}
+              style={styles.buttons}
+            />
+            <Button
+              text="Registrarse"
+              onPress={createUser}
+              style={[
+                styles.buttons,
+                { backgroundColor: themeColor.succes500 },
+              ]}
+            />
+          </View>
+        </ImageBackground>
+      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 };
@@ -94,22 +127,34 @@ const Login = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
   },
   banner: {
     width: "90%",
     height: "45%",
   },
   containerInputs: {
-    margin: 10,
-    height: 100,
+    height: 150,
     width: "80%",
     justifyContent: "space-around",
+    marginTop: 30,
   },
   containerButtons: {
     height: 110,
     justifyContent: "space-between",
+    position: "absolute",
+    bottom: 70,
+  },
+  buttons: {
+    minWidth: "60%",
+  },
+  inner: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  photo: {
+    width: "35%",
+    height: "15%",
   },
 });
 
