@@ -52,12 +52,13 @@ const Login = ({ navigation }) => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       await AsyncStorage.setItem("@user_token", response.user.uid);
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "Home" }],
-      });
+      await navigation.replace('Home');
+      // await navigation.reset({
+      //   index: 0,
+      //   routes: [{ name: "Home" }],
+      // });
     } catch (e) {
-      alert("Credenciales invalidas");
+      Alert.alert(e);
     }
   };
 
