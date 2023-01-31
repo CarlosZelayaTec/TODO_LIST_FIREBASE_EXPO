@@ -37,8 +37,12 @@ const Login = ({ navigation }) => {
 
   const createUser = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      Alert.alert("Creado con exito");
+      if (!!email && !!password) {
+        await createUserWithEmailAndPassword(auth, email, password);
+        Alert.alert("Creado con exito");
+      } else {
+        Alert.alert("Debe rellenar los campos vacíos");
+      }
     } catch (e) {
       Alert.alert(e);
     }
@@ -73,33 +77,35 @@ const Login = ({ navigation }) => {
           resizeMode="cover"
           style={styles.inner}
         >
-          <Image
-            source={require("../../assets/user.png")}
-            resizeMode="cover"
-            style={styles.photo}
-          />
-          <View style={styles.containerInputs}>
-            <TextInput
-              placeholder="email"
-              value={email}
-              rightContent={
-                <Ionicons name="mail" size={23} color={themeColor.gray200} />
-              }
-              onChangeText={(e) => setEmail(e)}
+          <View style={styles.containerItems}>
+            <Image
+              source={require("../../assets/user.png")}
+              resizeMode="cover"
+              style={styles.photo}
             />
-            <TextInput
-              placeholder="contraseña"
-              rightContent={
-                <Ionicons
-                  name="lock-closed"
-                  size={23}
-                  color={themeColor.gray200}
-                />
-              }
-              value={password}
-              onChangeText={(e) => setPassword(e)}
-              secureTextEntry={true}
-            />
+            <View style={styles.containerInputs}>
+              <TextInput
+                placeholder="email"
+                value={email}
+                rightContent={
+                  <Ionicons name="mail" size={23} color={themeColor.gray200} />
+                }
+                onChangeText={(e) => setEmail(e)}
+              />
+              <TextInput
+                placeholder="contraseña"
+                rightContent={
+                  <Ionicons
+                    name="lock-closed"
+                    size={23}
+                    color={themeColor.gray200}
+                  />
+                }
+                value={password}
+                onChangeText={(e) => setPassword(e)}
+                secureTextEntry={true}
+              />
+            </View>
           </View>
 
           <View style={styles.containerButtons}>
@@ -136,13 +142,11 @@ const styles = StyleSheet.create({
     height: 150,
     width: "80%",
     justifyContent: "space-around",
-    marginTop: 30,
+    marginTop: 20,
   },
   containerButtons: {
     height: 110,
     justifyContent: "space-between",
-    position: "absolute",
-    bottom: 70,
   },
   buttons: {
     minWidth: "60%",
@@ -150,11 +154,18 @@ const styles = StyleSheet.create({
   inner: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-around",
+    paddingVertical: 20,
   },
   photo: {
     width: "35%",
-    height: "15%",
+    height: "25%",
+  },
+  containerItems: {
+    width: "100%",
+    alignItems: "center",
+    height: "60%",
+    justifyContent: "flex-end",
   },
 });
 

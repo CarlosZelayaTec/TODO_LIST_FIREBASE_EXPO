@@ -10,7 +10,7 @@ export default function App() {
   return (
     <ThemeProvider theme="light" >
       <Navigation />
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
     </ThemeProvider>
   );
 }
